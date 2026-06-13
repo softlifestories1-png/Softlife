@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Softlife — Digital Downloads for a Calmer Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --blush:    #f5ede8;
+    --rose:     #c27a78;
+    --rose-deep:#9e5a58;
+    --clay:     #7a4a48;
+    --ink:      #2e2424;
+    --mist:     #f9f4f2;
+    --white:    #ffffff;
+    --border:   #e8d8d4;
+    --serif:    'Cormorant Garamond', Georgia, serif;
+    --script:   'Dancing Script', cursive;
+    --sans:     'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--white);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo {
+    font-family: var(--script);
+    font-size: 28px;
+    color: var(--rose);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex; gap: 28px; list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink); text-decoration: none; font-weight: 500;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--rose); }
+  .nav-icons { display: flex; gap: 16px; align-items: center; }
+  .nav-icons button {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink); font-size: 18px; padding: 4px;
+    transition: color .2s;
+  }
+  .nav-icons button:hover { color: var(--rose); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; transition: .3s; }
+  .mobile-menu {
+    display: none; position: fixed; inset: 0; background: var(--white);
+    z-index: 200; flex-direction: column; align-items: center;
+    justify-content: center; gap: 36px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: var(--serif); font-size: 26px; color: var(--ink);
+    text-decoration: none; letter-spacing: .04em;
+  }
+  .mobile-close {
+    position: absolute; top: 18px; right: 20px;
+    background: none; border: none; font-size: 28px; cursor: pointer; color: var(--ink);
+  }
+  .cart-badge {
+    position: relative;
+  }
+  .cart-badge::after {
+    content: attr(data-count);
+    position: absolute; top: -4px; right: -6px;
+    background: var(--rose); color: white;
+    font-size: 10px; font-family: var(--sans); font-weight: 600;
+    border-radius: 50%; width: 16px; height: 16px;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-block; padding: 13px 32px;
+    border-radius: 100px; font-family: var(--sans);
+    font-size: 12px; font-weight: 500; letter-spacing: .12em;
+    text-transform: uppercase; cursor: pointer;
+    border: 2px solid transparent; text-decoration: none;
+    transition: all .2s;
+  }
+  .btn-primary { background: var(--rose); color: white; }
+  .btn-primary:hover { background: var(--rose-deep); }
+  .btn-outline { background: transparent; border-color: var(--rose); color: var(--rose); }
+  .btn-outline:hover { background: var(--rose); color: white; }
+  .btn-dark { background: var(--ink); color: white; }
+  .btn-dark:hover { background: var(--clay); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--blush);
+    padding: 70px 24px 60px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-eyebrow {
+    font-family: var(--script); font-size: 30px; color: var(--rose);
+    display: block; margin-bottom: 4px;
+  }
+  .hero-title {
+    font-family: var(--serif); font-size: clamp(54px, 12vw, 100px);
+    font-weight: 600; color: var(--ink); line-height: .9;
+    letter-spacing: -.02em; margin-bottom: 16px;
+  }
+  .hero-brand {
+    font-family: var(--script); font-size: clamp(38px, 8vw, 64px);
+    color: var(--rose); display: block; margin-bottom: 14px;
+  }
+  .hero-sub {
+    font-size: 14px; color: #7a6060; max-width: 300px;
+    margin: 0 auto 28px; line-height: 1.7;
+  }
+  .hero-sale {
+    margin-top: 40px;
+  }
+  .hero-sale-pct {
+    font-family: var(--serif); font-size: clamp(72px, 18vw, 140px);
+    color: var(--rose); font-weight: 300; line-height: 1;
+    display: block;
+  }
+  .hero-sale-off {
+    font-family: var(--script); font-size: 40px; color: var(--rose-deep);
+    display: block; margin-top: -10px;
+  }
+  .hero-sale-label {
+    font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+    color: #9a7878; margin-top: 6px;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-title {
+    font-family: var(--serif); font-size: clamp(28px, 6vw, 44px);
+    font-weight: 400; color: var(--ink); letter-spacing: -.01em;
+  }
+  .section-sub {
+    font-size: 13px; color: #9a8080; margin-top: 6px;
+    letter-spacing: .02em;
+  }
+  .section-header { text-align: center; margin-bottom: 40px; }
+
+  /* ── FEATURED ── */
+  .featured { padding: 64px 20px; background: var(--mist); }
+  .filter-bar { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px; }
+  .filter-btn {
+    padding: 8px 22px; border-radius: 100px; border: 1.5px solid var(--border);
+    background: none; cursor: pointer; font-size: 12px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink); font-family: var(--sans);
+    transition: all .2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--rose); border-color: var(--rose); color: white;
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px; max-width: 1100px; margin: 0 auto;
+  }
+  .product-card {
+    background: white; border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--border); cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(194,122,120,.15); }
+  .product-thumb {
+    aspect-ratio: 4/3; background: var(--blush);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px; position: relative; overflow: hidden;
+  }
+  .product-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--rose); color: white;
+    font-size: 10px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; padding: 4px 10px; border-radius: 100px;
+  }
+  .product-body { padding: 16px 18px 20px; }
+  .product-cat {
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--rose); font-weight: 500; margin-bottom: 6px;
+  }
+  .product-name {
+    font-family: var(--serif); font-size: 18px; color: var(--ink);
+    margin-bottom: 6px; line-height: 1.3;
+  }
+  .product-desc { font-size: 12px; color: #9a8080; line-height: 1.6; margin-bottom: 14px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-family: var(--serif); font-size: 20px; color: var(--rose); font-weight: 600; }
+  .product-old { font-size: 13px; color: #bbb; text-decoration: line-through; margin-left: 6px; }
+  .add-btn {
+    background: var(--rose); color: white; border: none;
+    border-radius: 100px; padding: 8px 16px; font-size: 11px;
+    letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
+    font-family: var(--sans); font-weight: 500; transition: background .2s;
+  }
+  .add-btn:hover { background: var(--rose-deep); }
+
+  /* ── WHY ── */
+  .why-section { padding: 64px 20px; background: var(--mist); }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+  .why-card {
+    background: white; border-radius: 16px; padding: 32px 24px;
+    text-align: center; border: 1px solid var(--border);
+  }
+  .why-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--blush); display: flex; align-items: center;
+    justify-content: center; margin: 0 auto 16px; font-size: 22px;
+  }
+  .why-card h3 { font-family: var(--serif); font-size: 19px; margin-bottom: 8px; }
+  .why-card p { font-size: 12px; color: #9a8080; line-height: 1.7; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { padding: 64px 20px; background: white; }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+  .testimonial-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px 24px;
+  }
+  .quote-mark { font-family: var(--serif); font-size: 42px; color: var(--rose); opacity: .6; line-height: 1; margin-bottom: 12px; }
+  .testimonial-card blockquote {
+    font-family: var(--serif); font-size: 16px; font-style: italic;
+    color: var(--ink); line-height: 1.7; margin-bottom: 20px;
+  }
+  .testimonial-author strong { font-size: 13px; font-weight: 500; }
+  .testimonial-author span { display: block; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #9a8080; margin-top: 2px; }
+
+  /* ── EMAIL SIGNUP ── */
+  .email-section {
+    background: var(--blush); padding: 60px 20px; text-align: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Ccircle cx='350' cy='50' r='200' fill='%23e8d4d0' fill-opacity='.3'/%3E%3Ccircle cx='50' cy='350' r='180' fill='%23d4b8b5' fill-opacity='.2'/%3E%3C/svg%3E");
+    background-size: cover;
+  }
+  .email-section h2 { font-family: var(--serif); font-size: clamp(28px,7vw,44px); color: var(--ink); margin-bottom: 10px; }
+  .email-section p { font-size: 13px; color: #9a8080; margin-bottom: 24px; }
+  .email-form { display: flex; flex-direction: column; gap: 12px; max-width: 380px; margin: 0 auto; }
+  .email-form input {
+    padding: 14px 20px; border-radius: 100px; border: 1.5px solid var(--border);
+    font-family: var(--sans); font-size: 14px; background: white; outline: none;
+    transition: border-color .2s;
+  }
+  .email-form input:focus { border-color: var(--rose); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--blush); padding: 48px 24px 28px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner { max-width: 900px; margin: 0 auto; }
+  .footer-brand { font-family: var(--script); font-size: 32px; color: var(--rose); margin-bottom: 8px; }
+  .footer-tagline { font-size: 13px; color: #9a8080; margin-bottom: 36px; }
+  .footer-cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 28px; margin-bottom: 40px; }
+  .footer-col h4 { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--clay); margin-bottom: 14px; font-weight: 600; }
+  .footer-col a, .footer-col span {
+    display: block; font-size: 13px; color: var(--ink); text-decoration: none;
+    margin-bottom: 8px; transition: color .2s;
+  }
+  .footer-col a:hover { color: var(--rose); }
+  .footer-bottom { border-top: 1px solid var(--border); padding-top: 20px; font-size: 11px; color: #b0a0a0; text-align: center; }
+
+  /* ── SHOP PAGE ── */
+  .page-hero {
+    background: var(--blush); text-align: center;
+    padding: 48px 20px 40px;
+  }
+  .page-hero h1 { font-family: var(--serif); font-size: clamp(36px, 8vw, 60px); color: var(--ink); }
+  .page-hero p { font-size: 13px; color: #9a8080; margin-top: 8px; }
+  .shop-wrap { padding: 48px 20px; max-width: 1100px; margin: 0 auto; }
+
+  /* ── PRODUCT DETAIL ── */
+  .product-detail { padding: 40px 20px; max-width: 900px; margin: 0 auto; }
+  .product-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .product-detail-image {
+    aspect-ratio: 1; background: var(--blush);
+    border-radius: 20px; display: flex; align-items: center;
+    justify-content: center; font-size: 100px;
+  }
+  .product-detail-cat { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); margin-bottom: 10px; }
+  .product-detail-title { font-family: var(--serif); font-size: clamp(26px, 5vw, 38px); color: var(--ink); line-height: 1.2; margin-bottom: 14px; }
+  .product-detail-price { font-family: var(--serif); font-size: 32px; color: var(--rose); margin-bottom: 8px; }
+  .product-detail-old { font-size: 16px; color: #bbb; text-decoration: line-through; }
+  .product-detail-desc { font-size: 14px; color: #7a6060; line-height: 1.8; margin: 20px 0; }
+  .product-includes { margin: 20px 0; }
+  .product-includes h4 { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--clay); margin-bottom: 12px; }
+  .product-includes li { font-size: 13px; color: var(--ink); margin-bottom: 6px; padding-left: 16px; position: relative; list-style: none; }
+  .product-includes li::before { content: '✓'; position: absolute; left: 0; color: var(--rose); font-weight: 600; }
+  .back-btn { background: none; border: none; cursor: pointer; color: var(--rose); font-size: 13px; display: flex; align-items: center; gap: 6px; margin-bottom: 24px; font-family: var(--sans); }
+
+  /* ── ABOUT ── */
+  .about-wrap { max-width: 800px; margin: 0 auto; padding: 60px 20px; }
+  .about-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-bottom: 64px; }
+  .about-image {
+    aspect-ratio: 1; background: var(--blush);
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 80px;
+  }
+  .about-text h2 { font-family: var(--serif); font-size: clamp(28px,5vw,40px); margin-bottom: 16px; }
+  .about-text p { font-size: 14px; color: #7a6060; line-height: 1.9; margin-bottom: 14px; }
+  .about-values { background: var(--blush); padding: 48px 20px; }
+  .values-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; max-width: 800px; margin: 32px auto 0; }
+  .value-item { text-align: center; padding: 20px; }
+  .value-item .vi { font-size: 32px; margin-bottom: 12px; }
+  .value-item h4 { font-family: var(--serif); font-size: 18px; margin-bottom: 6px; }
+  .value-item p { font-size: 12px; color: #9a8080; line-height: 1.7; }
+
+  /* ── CONTACT ── */
+  .contact-wrap { max-width: 600px; margin: 0 auto; padding: 60px 20px; }
+  .contact-wrap h1 { font-family: var(--serif); font-size: clamp(32px, 7vw, 50px); margin-bottom: 10px; }
+  .contact-wrap .sub { font-size: 14px; color: #9a8080; margin-bottom: 40px; line-height: 1.7; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--clay); margin-bottom: 8px; font-weight: 500; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 13px 18px; border: 1.5px solid var(--border);
+    border-radius: 12px; font-family: var(--sans); font-size: 14px;
+    background: white; outline: none; transition: border-color .2s;
+    color: var(--ink);
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--rose); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .contact-info { margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--border); }
+  .contact-info h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 16px; }
+  .contact-info p { font-size: 13px; color: #7a6060; margin-bottom: 10px; }
+
+  /* ── BLOG ── */
+  .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; max-width: 1000px; margin: 0 auto; padding: 48px 20px; }
+  .blog-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: transform .2s; }
+  .blog-card:hover { transform: translateY(-3px); }
+  .blog-thumb { aspect-ratio: 16/9; background: var(--blush); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+  .blog-body { padding: 20px 22px 24px; }
+  .blog-cat { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); margin-bottom: 8px; }
+  .blog-title { font-family: var(--serif); font-size: 20px; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .blog-excerpt { font-size: 13px; color: #9a8080; line-height: 1.7; margin-bottom: 16px; }
+  .blog-meta { font-size: 11px; color: #b0a0a0; }
+
+  /* ── CART SIDEBAR ── */
+  .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.3); z-index: 300; display: none; }
+  .cart-overlay.open { display: block; }
+  .cart-sidebar {
+    position: fixed; top: 0; right: -400px; width: 360px; height: 100%;
+    background: white; z-index: 301; padding: 28px 24px;
+    display: flex; flex-direction: column;
+    transition: right .3s ease; box-shadow: -8px 0 40px rgba(0,0,0,.1);
+  }
+  .cart-sidebar.open { right: 0; }
+  .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+  .cart-header h2 { font-family: var(--serif); font-size: 24px; }
+  .close-cart { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--ink); }
+  .cart-items { flex: 1; overflow-y: auto; }
+  .cart-item { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .cart-item-thumb { width: 52px; height: 52px; background: var(--blush); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .cart-item-info flex: 1; }
+  .cart-item-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .cart-item-price { font-size: 13px; color: var(--rose); }
+  .cart-item-remove { background: none; border: none; color: #bbb; cursor: pointer; font-size: 18px; align-self: start; }
+  .cart-footer { border-top: 1px solid var(--border); padding-top: 20px; }
+  .cart-total { display: flex; justify-content: space-between; font-family: var(--serif); font-size: 20px; margin-bottom: 16px; }
+  .cart-empty { text-align: center; padding: 60px 0; color: #b0a0a0; font-size: 14px; }
+  .cart-empty .ci { font-size: 48px; margin-bottom: 16px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--ink); color: white; padding: 14px 28px;
+    border-radius: 100px; font-size: 13px; z-index: 400;
+    transition: transform .3s; white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .product-detail-grid { grid-template-columns: 1fr; }
+    .about-intro { grid-template-columns: 1fr; }
+    .about-image { width: 180px; margin: 0 auto; }
+    .cart-sidebar { width: 100%; right: -100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobileMenu()">✕</button>
+  <a href="#" onclick="navigate('home');closeMobileMenu()">Home</a>
+  <a href="#" onclick="navigate('shop');closeMobileMenu()">Shop</a>
+  <a href="#" onclick="navigate('about');closeMobileMenu()">About</a>
+  <a href="#" onclick="navigate('blog');closeMobileMenu()">Journal</a>
+  <a href="#" onclick="navigate('contact');closeMobileMenu()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <button class="hamburger" onclick="openMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="nav-logo" onclick="navigate('home')">Softlife</a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="navigate('shop')">Shop</a></li>
+    <li><a href="#" onclick="navigate('about')">About</a></li>
+    <li><a href="#" onclick="navigate('blog')">Journal</a></li>
+    <li><a href="#" onclick="navigate('contact')">Contact</a></li>
+  </ul>
+  <div class="nav-icons">
+    <button onclick="navigate('shop')" aria-label="Search">🔍</button>
+    <button class="cart-badge" id="cartBtn" data-count="0" onclick="openCart()" aria-label="Cart">🛒</button>
+  </div>
+</nav>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2>Your Cart</h2>
+    <button class="close-cart" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total"><span>Total</span><span id="cartTotal">$0</span></div>
+    <button class="btn btn-primary" style="width:100%" onclick="showToast('🎉 Order placed! Check your email for download links.')">Checkout</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════════════════════════════
+     HOME PAGE
+════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-eyebrow">Summer</span>
+    <h1 class="hero-title">SALE</h1>
+    <span class="hero-brand">Softlife</span>
+    <p class="hero-sub">Beautifully designed digital downloads for a calmer, more intentional everyday.</p>
+    <button class="btn btn-primary" onclick="navigate('shop')">Shop the Sale</button>
+    <div class="hero-sale">
+      <span class="hero-sale-pct">50%</span>
+      <span class="hero-sale-off">off</span>
+      <p class="hero-sale-label">All digital downloads — limited time</p>
+    </div>
+  </section>
+
+  <!-- Featured -->
+  <section class="featured" id="home-featured">
+    <div class="section-header">
+      <h2 class="section-title">Featured Downloads</h2>
+      <p class="section-sub">Instant-download favorites loved by thousands of soft-life seekers.</p>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterProducts('all',this)">All</button>
+      <button class="filter-btn" onclick="filterProducts('planner',this)">Planners</button>
+      <button class="filter-btn" onclick="filterProducts('journal',this)">Journals</button>
+      <button class="filter-btn" onclick="filterProducts('template',this)">Templates</button>
+      <button class="filter-btn" onclick="filterProducts('ebook',this)">Ebooks</button>
+    </div>
+    <div class="products-grid" id="homeFeaturedGrid"></div>
+    <div style="text-align:center;margin-top:40px">
+      <button class="btn btn-outline" onclick="navigate('shop')">View All Products</button>
+    </div>
+  </section>
+
+  <!-- Why Softlife -->
+  <section class="why-section">
+    <div class="section-header">
+      <h2 class="section-title">Why Softlife</h2>
+      <p class="section-sub">Thoughtful design, delivered the moment you check out.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">⬇️</div>
+        <h3>Instant Download</h3>
+        <p>Get your files immediately after purchase — no waiting, no shipping.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">♾️</div>
+        <h3>Lifetime Access</h3>
+        <p>Re-download your products anytime from your account. Forever yours.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">✨</div>
+        <h3>Lovingly Designed</h3>
+        <p>Every template is crafted with calm, considered detail.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💗</div>
+        <h3>Friendly Support</h3>
+        <p>Real help whenever you need a hand with your files.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <div class="section-header">
+      <h2 class="section-title">Loved by the Softlife Community</h2>
+      <p class="section-sub">A few words from people building gentler routines.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="quote-mark">"</div>
+        <blockquote>The daily planner completely changed how I start my mornings. So pretty and so practical.</blockquote>
+        <div class="testimonial-author"><strong>Amara R.</strong><span>Wellness Coach</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-mark">"</div>
+        <blockquote>I run my whole small business on the Softlife template bundle. Worth every penny.</blockquote>
+        <div class="testimonial-author"><strong>Joelle M.</strong><span>Founder, Bloom Studio</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-mark">"</div>
+        <blockquote>Downloaded, printed, and journaling within five minutes. The aesthetic is unmatched.</blockquote>
+        <div class="testimonial-author"><strong>Priya K.</strong><span>Content Creator</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Email Signup -->
+  <section class="email-section">
+    <h2>Join the Soft List</h2>
+    <p>Get gentle tips, freebies, and early access to new drops and sales.</p>
+    <div class="email-form">
+      <input type="email" placeholder="Your email address" />
+      <button class="btn btn-primary" onclick="showToast('🌸 Welcome to the Soft List!')">Subscribe</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">Softlife</div>
+      <div class="footer-tagline">Beautifully designed digital downloads for a softer, more intentional life.</div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <a href="#" onclick="navigate('shop')">Shop</a>
+          <a href="#" onclick="navigate('about')">About</a>
+          <a href="#" onclick="navigate('blog')">Journal</a>
+          <a href="#" onclick="navigate('contact')">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="#">My Account</a>
+          <a href="#" onclick="openCart()">View Cart</a>
+          <span>support@softlife.co</span>
+        </div>
+        <div class="footer-col">
+          <h4>Soft List</h4>
+          <input type="email" placeholder="Your email address" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:100px;font-size:13px;width:100%;margin-bottom:10px;font-family:var(--sans);outline:none" />
+          <button class="btn btn-primary" style="font-size:11px;padding:10px 20px" onclick="showToast('🌸 Subscribed!')">Subscribe</button>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2026 Softlife. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SHOP PAGE
+════════════════════════════════════════════ -->
+<div id="page-shop" class="page">
+  <div class="page-hero">
+    <h1>The Shop</h1>
+    <p>Digital downloads ready the moment you check out.</p>
+  </div>
+  <div class="shop-wrap">
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterProducts('all',this)">All</button>
+      <button class="filter-btn" onclick="filterProducts('planner',this)">Planners</button>
+      <button class="filter-btn" onclick="filterProducts('journal',this)">Journals</button>
+      <button class="filter-btn" onclick="filterProducts('template',this)">Templates</button>
+      <button class="filter-btn" onclick="filterProducts('ebook',this)">Ebooks</button>
+    </div>
+    <div class="products-grid" id="shopGrid"></div>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">Softlife</div>
+      <div class="footer-tagline">Beautifully designed digital downloads for a softer, more intentional life.</div>
+      <div class="footer-bottom">© 2026 Softlife. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PRODUCT DETAIL PAGE
+════════════════════════════════════════════ -->
+<div id="page-product" class="page">
+  <div style="max-width:900px;margin:0 auto;padding:24px 20px 0">
+    <button class="back-btn" onclick="navigate('shop')">← Back to Shop</button>
+  </div>
+  <div class="product-detail" id="productDetail"></div>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">Softlife</div>
+      <div class="footer-bottom">© 2026 Softlife. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     ABOUT PAGE
+════════════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <div class="page-hero">
+    <h1>About Softlife</h1>
+    <p>The story behind the brand.</p>
+  </div>
+  <div class="about-wrap">
+    <div class="about-intro">
+      <div class="about-image">🌸</div>
+      <div class="about-text">
+        <h2>Made for women who crave calm.</h2>
+        <p>Softlife was born out of a simple belief: that your daily tools should feel as good as the life you're building. Every planner, journal, and template is designed to slow you down, help you think clearly, and make your routines something to look forward to.</p>
+        <p>We create digital downloads that are beautiful enough to inspire and practical enough to actually use — because you deserve both.</p>
+        <button class="btn btn-primary" onclick="navigate('shop')">Browse the Shop</button>
+      </div>
+    </div>
+  </div>
+  <div class="about-values">
+    <div class="section-header">
+      <h2 class="section-title">What We Stand For</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-item"><div class="vi">🕊️</div><h4>Calm by Design</h4><p>Every element is chosen to reduce friction, not add it.</p></div>
+      <div class="value-item"><div class="vi">🎨</div><h4>Beauty Matters</h4><p>Aesthetics aren't extra — they're what makes you actually use the thing.</p></div>
+      <div class="value-item"><div class="vi">♻️</div><h4>Intentional Living</h4><p>We make tools for a slower, more considered approach to each day.</p></div>
+      <div class="value-item"><div class="vi">💌</div><h4>Community First</h4><p>The Softlife community is full of women lifting each other up.</p></div>
+    </div>
+  </div>
+  <section class="email-section">
+    <h2>Join the Soft List</h2>
+    <p>Get gentle tips, freebies, and early access to new drops and sales.</p>
+    <div class="email-form">
+      <input type="email" placeholder="Your email address" />
+      <button class="btn btn-primary" onclick="showToast('🌸 Welcome to the Soft List!')">Subscribe</button>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">Softlife</div>
+      <div class="footer-bottom">© 2026 Softlife. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     CONTACT PAGE
+════════════════════════════════════════════ -->
+<div id="page-contact" class="page">
+  <div class="page-hero">
+    <h1>Get in Touch</h1>
+    <p>We'd love to hear from you.</p>
+  </div>
+  <div class="contact-wrap">
+    <p class="sub">Have a question about an order, a product, or just want to say hello? Fill in the form below and we'll get back to you within 1–2 business days.</p>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" placeholder="e.g. Amara Johnson" />
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" placeholder="hello@example.com" />
+    </div>
+    <div class="form-group">
+      <label>Subject</label>
+      <select>
+        <option>General Enquiry</option>
+        <option>Order Help</option>
+        <option>Download Issue</option>
+        <option>Collaboration</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Message</label>
+      <textarea placeholder="Tell us what's on your mind..."></textarea>
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="showToast('💌 Message sent! We\'ll reply soon.')">Send Message</button>
+    <div class="contact-info">
+      <h3>Other Ways to Reach Us</h3>
+      <p>📧 support@softlife.co</p>
+      <p>⏰ Mon–Fri, 9am–5pm GMT</p>
+      <p>📱 Follow us @softlifestore</p>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">Softlife</div>
+      <div class="footer-bottom">© 2026 Softlife. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     BLOG PAGE
+════════════════════════════════════════════ -->
+<div id="page-blog" class="page">
+  <div class="page-hero">
+    <h1>The Journal</h1>
+    <p>Gentle reads for a softer life.</p>
+  </div>
+  <div class="blog-grid">
+    <div class="blog-card">
+      <div class="blog-thumb">📖</div>
+      <div class="blog-body">
+        <div class="blog-cat">Planning</div>
+        <div class="blog-title">5 Ways a Daily Planner Changed My Morning Routine</div>
+        <div class="blog-excerpt">Small shifts in how you start the day can ripple through everything. Here's what happened when we committed to a morning ritual.</div>
+        <div class="blog-meta">June 8, 2026 · 4 min read</div>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb">✍️</div>
+      <div class="blog-body">
+        <div class="blog-cat">Journaling</div>
+        <div class="blog-title">The Beginner's Guide to Guided Journaling</div>
+        <div class="blog-excerpt">Blank pages are intimidating. Guided prompts make it easy to start — and even easier to keep going.</div>
+        <div class="blog-meta">May 30, 2026 · 6 min read</div>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb">💼</div>
+      <div class="blog-body">
+        <div class="blog-cat">Business</div>
+        <div class="blog-title">How to Run Your Whole Small Business with Digital Templates</div>
+        <div class="blog-excerpt">From invoices to social media calendars, the right templates can free up hours every week. We'll show you how.</div>
+        <div class="blog-meta">May 18, 2026 · 5 min read</div>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb">🌿</div>
+      <div class="blog-body">
+        <div class="blog-cat">Wellness</div>
+        <div class="blog-title">Slow Living in a Fast World: A Practical Guide</div>
+        <div class="blog-excerpt">Intentional living doesn't mean doing less. It means doing what matters, with full attention.</div>
+        <div class="blog-meta">May 5, 2026 · 7 min read</div>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb">📱</div>
+      <div class="blog-body">
+        <div class="blog-cat">Social Media</div>
+        <div class="blog-title">Batch Your Content in 2 Hours a Week with Templates</div>
+        <div class="blog-excerpt">Stop scrambling for content. Our social media templates make batching a breeze — even for non-designers.</div>
+        <div class="blog-meta">April 22, 2026 · 4 min read</div>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb">🎯</div>
+      <div class="blog-body">
+        <div class="blog-cat">Goals</div>
+        <div class="blog-title">Setting Goals That Actually Stick (And Feel Good)</div>
+        <div class="blog-excerpt">Forget hustle culture goal-setting. Here's a softer, more sustainable approach to what you want.</div>
+        <div class="blog-meta">April 10, 2026 · 5 min read</div>
+      </div>
+    </div>
+  </div>
+  <section class="email-section">
+    <h2>Never Miss a Post</h2>
+    <p>Gentle reads, straight to your inbox.</p>
+    <div class="email-form">
+      <input type="email" placeholder="Your email address" />
+      <button class="btn btn-primary" onclick="showToast('🌸 Welcome to the Soft List!')">Subscribe</button>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">Softlife</div>
+      <div class="footer-bottom">© 2026 Softlife. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ── DATA ──
+const products = [
+  { id:1, name:'Daily Harmony Planner', cat:'planner', emoji:'📅', price:9, oldPrice:18, desc:'A structured yet gentle daily planner to bring calm to your mornings.', includes:['Dated & undated versions','A5 & Letter size PDFs','Morning ritual page','Weekly review spread'], badge:'Best Seller' },
+  { id:2, name:'Mindful Morning Journal', cat:'journal', emoji:'☀️', price:7, oldPrice:14, desc:'95 guided prompts to ground your mornings and set a soft tone for the day.', includes:['95 guided prompts','A5 printable PDF','Digital (Notability) version','Bonus affirmation cards'], badge:'New' },
+  { id:3, name:'Instagram Content Kit', cat:'template', emoji:'📱', price:12, oldPrice:24, desc:'60 done-for-you Instagram templates that match the Softlife aesthetic perfectly.', includes:['60 Canva templates','3 colour palettes','Caption prompt guide','Story & grid layouts'], badge:null },
+  { id:4, name:'Soft Life Ebook Bundle', cat:'ebook', emoji:'📚', price:15, oldPrice:30, desc:'Three ebooks on slow living, intentional planning, and building a softer business.', includes:['3 ebooks (PDF)','Bonus workbook','Lifetime access','Printable reflection pages'], badge:'Bundle' },
+  { id:5, name:'Weekly Reset Planner', cat:'planner', emoji:'🗓️', price:6, oldPrice:12, desc:'Your Sunday ritual in print form. Review the week and set a gentle intention for the next.', includes:['Undated weekly layout','Habit & mood tracker','Gratitude section','A4 & Letter PDF'], badge:null },
+  { id:6, name:'Business Template Suite', cat:'template', emoji:'💼', price:18, oldPrice:36, desc:'Everything you need to run a beautiful small business: invoices, proposals, social calendars.', includes:['Invoice & quote templates','Client proposal deck','Social media calendar','30 Canva graphics'], badge:'Sale' },
+  { id:7, name:'Gratitude Journal', cat:'journal', emoji:'💛', price:5, oldPrice:10, desc:'A simple, beautiful practice. 365 daily gratitude prompts designed to shift your perspective.', includes:['365 daily prompts','Gratitude reflection pages','A5 printable PDF','Bonus vision board page'], badge:null },
+  { id:8, name:'Digital Wellness Planner', cat:'planner', emoji:'🌿', price:11, oldPrice:22, desc:'Track habits, water, sleep, workouts, and more — all in one thoughtfully designed planner.', includes:['Habit & sleep tracker','Meal & water log','Monthly goal sheet','GoodNotes compatible'], badge:'New' },
+];
+
+let cart = [];
+let currentFilter = 'all';
+
+// ── NAVIGATION ──
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+  if (page === 'home') renderHomeFeatured();
+  if (page === 'shop') renderShop();
+}
+
+// ── RENDER PRODUCTS ──
+function productCard(p, gridId) {
+  return `
+    <div class="product-card" onclick="openProduct(${p.id})">
+      <div class="product-thumb">
+        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+        <span>${p.emoji}</span>
+      </div>
+      <div class="product-body">
+        <div class="product-cat">${p.cat.charAt(0).toUpperCase()+p.cat.slice(1)}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-footer">
+          <div>
+            <span class="product-price">$${p.price}</span>
+            <span class="product-old">$${p.oldPrice}</span>
+          </div>
+          <button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">Add</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderHomeFeatured() {
+  const filtered = currentFilter === 'all' ? products.slice(0,6) : products.filter(p=>p.cat===currentFilter).slice(0,6);
+  document.getElementById('homeFeaturedGrid').innerHTML = filtered.map(p=>productCard(p,'home')).join('');
+}
+
+function renderShop() {
+  const filtered = currentFilter === 'all' ? products : products.filter(p=>p.cat===currentFilter);
+  document.getElementById('shopGrid').innerHTML = filtered.map(p=>productCard(p,'shop')).join('');
+}
+
+function filterProducts(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const onShop = document.getElementById('page-shop').classList.contains('active');
+  if (onShop) renderShop(); else renderHomeFeatured();
+}
+
+// ── PRODUCT DETAIL ──
+function openProduct(id) {
+  const p = products.find(x=>x.id===id);
+  document.getElementById('productDetail').innerHTML = `
+    <div class="product-detail-grid">
+      <div class="product-detail-image">${p.emoji}</div>
+      <div>
+        <div class="product-detail-cat">${p.cat.charAt(0).toUpperCase()+p.cat.slice(1)}</div>
+        <h1 class="product-detail-title">${p.name}</h1>
+        <div>
+          <span class="product-detail-price">$${p.price}</span>
+          <span class="product-detail-old">$${p.oldPrice}</span>
+        </div>
+        <p class="product-detail-desc">${p.desc}</p>
+        <div class="product-includes">
+          <h4>What's Included</h4>
+          <ul>${p.includes.map(i=>`<li>${i}</li>`).join('')}</ul>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-bottom:12px" onclick="addToCart(${p.id})">Add to Cart — $${p.price}</button>
+        <button class="btn btn-outline" style="width:100%" onclick="navigate('shop')">Continue Shopping</button>
+      </div>
+    </div>`;
+  navigate('product');
+}
+
+// ── CART ──
+function addToCart(id) {
+  const p = products.find(x=>x.id===id);
+  if (!cart.find(x=>x.id===id)) cart.push({...p});
+  updateCartUI();
+  showToast(`🛍️ "${p.name}" added to cart`);
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(x=>x.id!==id);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const btn = document.getElementById('cartBtn');
+  btn.dataset.count = cart.length;
+  const items = document.getElementById('cartItems');
+  const footer = document.getElementById('cartFooter');
+  if (cart.length === 0) {
+    items.innerHTML = `<div class="cart-empty"><div class="ci">🛒</div><p>Your cart is empty.<br>Browse the shop to find something you love.</p></div>`;
+    footer.style.display = 'none';
+  } else {
+    items.innerHTML = cart.map(p=>`
+      <div class="cart-item">
+        <div class="cart-item-thumb">${p.emoji}</div>
+        <div style="flex:1">
+          <div class="cart-item-name">${p.name}</div>
+          <div class="cart-item-price">$${p.price}</div>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart(${p.id})">✕</button>
+      </div>`).join('');
+    const total = cart.reduce((s,p)=>s+p.price,0);
+    document.getElementById('cartTotal').textContent = `$${total}`;
+    footer.style.display = 'block';
+  }
+}
+
+function openCart() {
+  document.getElementById('cartSidebar').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+  updateCartUI();
+}
+function closeCart() {
+  document.getElementById('cartSidebar').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+
+// ── MOBILE MENU ──
+function openMobileMenu() { document.getElementById('mobileMenu').classList.add('open'); }
+function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// ── INIT ──
+renderHomeFeatured();
+updateCartUI();
+</script>
+</body>
+</html>
